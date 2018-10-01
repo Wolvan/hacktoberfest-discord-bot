@@ -63,10 +63,10 @@ client.on('message', async (msg) => {
           const res = JSON.parse(data);
           let items = res.items;
           let rItem = items[Math.floor(Math.random * items.length)];
-          await msg.channel.send('How about this one: `' + rItem.title + '`\n' + rItem.html_url);
+          await m.edit('How about this one: `' + rItem.title + '`\n' + rItem.html_url);
         } catch (error) {
           console.log(error);
-          await msg.channel.send('Oops! Something happened while I tried to query GitHub: ' + error.message + "\nFull log visible in the console.");
+          await m.edit('Oops! Something happened while I tried to query GitHub: ' + error.message + "\nFull log visible in the console.");
         }
       });
     });
