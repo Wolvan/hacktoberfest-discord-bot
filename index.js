@@ -47,6 +47,29 @@ client.on('message', async (msg) => {
     });
   } else if(command === 'scream') {
     msg.reply(args.join(' ').toUpperCase());
+  } else if(command === 'randomissue' || command === "ri") {
+    const m = await msg.channel.send('Querying GitHub for pull requests with label Hacktoberfest...');
+    const apiUrl = `https://api.github.com/search/issues?q=label:hacktoberfest`;
+    https.get(apiUrl, {
+      headers: {
+        'User-Agent': 'Hacktoberfest bot <https://github.com/RuyiLi/hacktoberfest-discord-bot>',
+      }
+    }, resp => {
+      let data = '';
+      resp
+      .on('data', chunk => data += chunk)
+      .on('end', async () => {
+        try {
+          const res = JSON.parse(data);
+          let items = res.items;
+          let rItem = items[Math.floor(Math.random * items.length)];
+          await msg.channel.send('How about this one: `' + rItem.title + '`\n' + rItem.html_url);
+        } catch (error) {
+          console.log(error);
+          await msg.channel.send('Oops! Something happened while I tried to query GitHub: ' + error.message + "\nFull log visible in the console.");
+        }
+      });
+    });
   }
 })
 
